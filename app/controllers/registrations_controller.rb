@@ -10,12 +10,16 @@ class RegistrationsController < Devise::RegistrationsController
         @payment = Payment.new({ email: params["user"]["email"],
                     token: params[:payment]["token"], user_id: resource.id })
         flash[:error] = "Please check registration errors" unless @payment.valid?
-
+        p params[:payment]["token"]
+        
         begin
-          puts "Beginning payment process..."
+          #@payment.card_number = params[:payment]["card_number"]
+          #@payment.card_cvv = params[:payment]["card_cvv"]
+          #@payment.card_expires_month = params[:payment]["card_expires_month"]
+          #@payment.card_expires_year = params[:payment]["card_expires_year"]
+
           @payment.process_payment
           @payment.save
-          puts "Payment saved!"
         rescue Exception => e
           puts e.message
           flash[:error] = e.message

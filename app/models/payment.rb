@@ -12,20 +12,38 @@ class Payment < ApplicationRecord
 
   def process_payment
     # customer = Stripe::Customer.create email: email, card: token
-    customer = Stripe::Customer.create({ email: email })
-    puts "Customer object created! " + customer[:id]
+    puts "Creating charge..."
     # Stripe::Charge.create customer: customer.id,
     #                      amount: 1000,
     #                      description: 'Premium',
     #                      currency: 'usd'
-    puts "Creating charge..."
-    Stripe::Charge.create({
+    charge = Stripe::Charge.create({
       amount: 1000,
-      customer: customer[:id],
       currency: 'usd',
-      description: 'Premium'
+      description: 'Premium',
+      source: token
     })
-    puts "Stripe charge created!"
+    puts "Charge successful!"
+
+    #customer = Stripe::Customer.create({ email: email })
+    #payment_method = Stripe::PaymentMethod.create({
+    #  type: 'card',
+    #  card: {
+    #    number: card_number,
+    #    exp_month: card_expires_month,
+    #    exp_year: card_expires_year,
+    #    cvc: card_cvv
+    #  }
+    #})
+  #   Stripe::PaymentIntent.create({
+  #     amount: 1000,
+  #     customer: customer[:id],
+  #     currency: 'usd',
+  #     description: 'Premium',
+  #     confirm: true,
+  #     payment_method: payment_method[:id]
+  #
+  #   })
   end
 
 end

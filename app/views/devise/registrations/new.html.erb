@@ -1,7 +1,3 @@
-<script type="text/javascript">
-  Stripe.setPublishableKey("<%= Rails.application.credentials.stripe[:publishable_key] %>");
-</script>
-
 <h1><%= t('.sign_up') %></h1>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
@@ -27,27 +23,34 @@
     <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control' %>
   </div>
 
-  <%= fields_for(:payment) do |p| %>
+  <div class="row">
+    <div class="form-group col-md-6">
+      <div id="<%= :card %>"></div>
+      <div id="card-errors"></div>
+    </div>
+  </div>
+  <!--
+  <% fields_for(:payment) do |p| %>
     <div class="row">
       <div class="form-group col-md-4">
-        <%= p.label :card_number, "Card number", data: { stripe: 'label' } %>
-        <%= p.text_field :card_number, class: "form-control", required: true, data: { stripe: 'number' } %>
+        <% p.label :card_number, "Card number", data: { stripe: 'label' } %>
+        <% p.text_field :card_number, class: "form-control", required: true, data: { stripe: 'number' } %>
       </div>
       <div class="form-group col-md-2">
-        <%= p.label :card_cvv, "Card CVV", data: { stripe: 'label' } %>
-        <%= p.text_field :card_cvv, class: "form-control", required: true, data: { stripe: 'cvc' } %>
+        <% p.label :card_cvv, "Card CVC", data: { stripe: 'label' } %>
+        <% p.text_field :card_cvv, class: "form-control", required: true, data: { stripe: 'cvc' } %>
       </div>
       <div class="form-group col-md-6">
         <div class="col-md-12">
-          <%= p.label :card_expires, "Card expires", data: { stripe: 'label' } %>
+          <% p.label :card_expires, "Card expires", data: { stripe: 'label' } %>
         </div>
         <div class="col-md-6">
-          <%= p.select :card_expires_month, options_for_select(Payment.month_options),
+          <% p.select :card_expires_month, options_for_select(Payment.month_options),
               { include_blank: 'Month' }, "data-stripe" => "exp-month",
               class: "form-control", required: true %>
         </div>
         <div class="col-md-6">
-          <%= p.select :card_expires_year, options_for_select(Payment.year_options.push),
+          <% p.select :card_expires_year, options_for_select(Payment.year_options.push),
               { include_blank: 'Year' },
               class: "form-control",
               data: { stripe: "exp-year" }, required: true %>
@@ -55,10 +58,30 @@
       </div>
     </div>
   <% end %>
-
+  -->
   <div class="form-group">
     <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  var stripe = Stripe("<%= Rails.application.credentials.stripe[:publishable_key] %>");
+  var elements = stripe.elements();
+
+  var card = elements.create('card', {
+    'style': {
+      'base': {
+        'fontFamily': 'Arial, sans-serif',
+        'fontSize': '18px',
+        'color': '#C1C7CD',
+      },
+      'invalid': {
+        'color': 'red',
+      },
+    }
+  });
+
+  card.mount("#<%= :card %>");
+</script>
 
 <%= render 'devise/shared/links' %>
