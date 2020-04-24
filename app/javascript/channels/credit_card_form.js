@@ -39,6 +39,7 @@ $(document).on('ready turbolinks:load', function(){
   };
 
   show_error = function (message) {
+    console.log(message);
     if($("#flash-messages").size() < 1){
       $('div.container.main div:first').prepend("<div id='flash-messages'></div>");
     }
@@ -46,7 +47,7 @@ $(document).on('ready turbolinks:load', function(){
     $("#flash-messages").html('<div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><div id="flash_alert">' + message + '</div></div>');
     $('.alert').delay(5000).fadeOut(3000);
 
-    return false;  
+    return false;
   };
 
 });
