@@ -1,27 +1,5 @@
 $(document).on('ready turbolinks:load', function(){
-  var show_error, stripeResponseHandler, submitHandler;
-
-  stripeResponseHandler = function (status, response) {
-    var token, $form;
-    $form = $('.cc_form');
-
-    if (response.error) {
-      console.log(response.error.message);
-      show_error(response.error.message);
-      $form.find("input[type=submit]").prop("disabled", false);
-    } else {
-      token = response.id;
-      $form.append($("<input type=\"hidden\" name=\"payment[token]\" />").val(token));
-      $("[data-stripe=number]").remove();
-      $("[data-stripe=cvc]").remove();
-      $("[data-stripe=exp-year]").remove();
-      $("[data-stripe=exp-month]").remove();
-      $("[data-stripe=label]").remove();
-      $form.get(0).submit();
-    }
-
-    return false;
-  };
+  var show_error, submitHandler;
 
   show_error = function (message) {
     console.log(message);
@@ -67,13 +45,14 @@ $(document).on('ready turbolinks:load', function(){
 
   $(".cc_form").on("submit", submitHandler);
 
-  card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-      displayError.textContent = event.error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  });
-
+  if(typeof card !== 'undefined'){
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+  }
 });
